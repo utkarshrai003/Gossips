@@ -11,6 +11,6 @@
   "dependencies": {
     "bcrypt": "1.0.2",
     "express": "*",
-    "mongodb": "2.2.26"
+    "mongoose": "4.9.9"
   }
 }
