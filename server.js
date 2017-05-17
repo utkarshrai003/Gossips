@@ -1,5 +1,6 @@
 
 var express = require('express');
+var database = require('./config/connection.js');
 var app = express();
 
 app.listen(8081, function () {
