@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>GOSSIPS</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      body {
+        background-color: #E9967A;
+      }
+      .formContainer {
+        margin-top: 80px;
+        padding: 30px;
+      }
+      .navbar {
+        width: 100%;
+      }
+      .form-heading {
+        float: right;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">Hello World</a>
+          </div>
+        </div>
+      </nav>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="panel panel-default formContainer">
+            <div class="panel-body">
+              <div class="signUpArea">
+                <div class="form-heading">
+                  <h4>Sign-Up</h4>
+                </div>
+                <form class="signUpForm" action="http://localhost:8081/sign_up" method="POST">
+                  <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="pwd" name="password" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="pwd-confirm">Password Confirmation:</label>
+                    <input type="password" class="form-control" id="pwd-confirm" name="password_confirmation" required>
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+              </div>
+
+              <!-- <div class="logInArea">
+                <div class="form-group">
+                  <label for="username">Username:</label>
+                  <input type="text" class="form-control" id="username">
+                </div>
+                <div class="form-group">
+                  <label for="pwd">Password:</label>
+                  <input type="password" class="form-control" id="pwd">
+                </div>
+                <button type="submit" class="btn btn-default">Submit</button>
+              </div> -->
+
+            </div>
+          </div>
+        <div class="col-md-4"></div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!-- <script>
+  $(".signUpForm").submit( function() {
+    $.ajax( {
+      type: "POST",
+      url: $("form").attr('action'),
+      data: $(".signUpForm").serialize(),
+      success: function( response ) {
+        debugger;
+        console.log(response);
+        //Code to process the response
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+    return false;
+  } );
+</script> -->
