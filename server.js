@@ -8,6 +8,8 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
+app.use(express.static('public/images'));
+
 app.use(require('./app/controllers'));
 
 app.listen(8081, function () {
