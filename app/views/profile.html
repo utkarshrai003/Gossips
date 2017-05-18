@@ -43,19 +43,68 @@
         overflow-y: auto;
         max-height: 470px;
       }
+      .friendsSearch {
+        float: right;
+      }
+      .notification {
+        width: 30px;
+        float:left;
+        margin-left: 120px;
+        margin-top: 7px;
+      }
+      .notificationIcon {
+          width: 30px;
+          height: 30px;
+      }
+      .options {
+        width: 400px;
+        height: 50px;
+        float: right;
+      }
     </style>
   </head>
 
   <body>
     <div class="container-fluid app">
-      <div class="row">
-        <nav class="navbar navbar-default">
+      <div class="topBar">
+        <div class="siteName">
+          <a class="navbar-brand" href="#">WebSiteName</a>
+        </div>
+        <div class="options">
+          <div class="notification">
+            <img src="notification.png" class="notificationIcon"></img>
+          </div>
+          <div class="friendsSearch">
+            <form class="navbar-form navbar-left">
+              <div class="form-group">
+                <input type="text" class="form-control" placeholder="Search">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+        <!-- <nav class="navbar navbar-default">
           <div class="container-fluid">
             <div class="navbar-header">
-              <a class="navbar-brand" href="#">WebSiteName</a>
-            </div>
+              <div class="siteName">
+                <a class="navbar-brand" href="#">WebSiteName</a>
+              </div>
+              <div class="options">
+              </div> -->
+              <!-- <div class="notification">
+                <img src="notification.png"></img>
+              </div> -->
+              <!-- <div class="friendsSearch">
+                <form class="navbar-form navbar-left">
+                  <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                  </div>
+                </form>
+              </div> -->
+            <!-- </div>
           </div>
-        </nav>
+        </nav> -->
       </div>
       <div class="row">
         <div class="friendListWindow col-md-3">
