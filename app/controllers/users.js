@@ -39,8 +39,8 @@ router.post('/login', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  User.findOne({username: 'username'}, function(err, user) {
-    if(err) {
+  User.findOne({username: username}, function(err, user) {
+    if(!user || err) {
       res.redirect('/welcome');
     }
     else {
