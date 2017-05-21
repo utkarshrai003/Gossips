@@ -18,6 +18,7 @@
     "mongoose": "4.9.9",
     "path": "0.12.7",
     "socket.io": "~2.0.1",
+    "swig": "1.4.2",
     "underscore": "1.8.3"
   }
 }
