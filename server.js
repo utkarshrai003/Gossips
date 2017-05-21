@@ -27,5 +27,3 @@ app.use(require('./app/controllers/users.js'));
 app.listen(8081, function () {
   console.log('Server started at port: 8081');
 });
-
-module.exports = router;
