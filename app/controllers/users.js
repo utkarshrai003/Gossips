@@ -4,6 +4,8 @@ var router = express.Router();
 var User = require('../models/user');
 var path = require('path');
 var isUserAuthenticated = require('./auth')
+var _ = require('underscore');
+var swig  = require('swig');
 
 router.post('/sign_up', function(req, res) {
   var name = req.body.name;
@@ -59,6 +61,39 @@ router.get('/welcome', function(req, res) {
 
 router.get('/profile', isUserAuthenticated, function(req, res) {
   res.sendFile('profile.html', { root: path.join(__dirname, '../views') });
+});
+
+router.get('/search_users', isUserAuthenticated, function(req, res) {
+  User.find({'username': new RegExp(req.query.key, 'i'), 'name': new RegExp(req.query.key, 'i') }, function(err, records) {
+    if(err) {
+      console.log(err);
+    }
+    else {
+      res.send(_.map(records, function(obj) {
+        return {
+          id: obj.id,
+          name: obj.username
+        }
+      }));
+    }
+  });
+});
+
+router.get('/users/:id', isUserAuthenticated, function(req, res) {
+  var id = req.params.id;
+  User.findOne({id: id}, function(err, user) {
+    if(err) {
+      res.send({status: 400, error: "No such User exists."});
+    }
+    else {
+      var template = swig.compileFile(path.join(__dirname, '../views/user.html'));
+      console.log(template);
+      var output = template({
+        id: id
+      });
+      res.send(output);
+    }
+  });
 });
 
 module.exports = router;
