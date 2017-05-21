@@ -61,6 +61,9 @@
         height: 50px;
         float: right;
       }
+      .results {
+        style: none
+      }
     </style>
   </head>
 
@@ -77,7 +80,11 @@
           <div class="friendsSearch">
             <form class="navbar-form navbar-left">
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <div class="dropdown">
+                  <input type="text" class="form-control" id="key" name="key" placeholder="Search">
+                  <ul class="results">
+            		 </ul>
+                </div>
               </div>
             </form>
           </div>
@@ -125,3 +132,22 @@
     </div>
   </body>
 </html>
+
+<script>
+  $('#key').keyup(function() {
+    $.ajax({
+      type: "GET",
+      url: 'http://localhost:8081/search_users',
+      data: {
+          key: $('#key').val()
+      },
+      success: function(results) {
+        $(".results").empty();
+        results.forEach(function(result) {
+          var elem = "<li><a href='http://localhost:8081/users/" + result.id + "'>" + result.name + "</a></li>";;
+          $(".results").append(elem);
+        });
+      }
+    });
+  });
+</script>
