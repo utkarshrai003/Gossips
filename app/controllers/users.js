@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
 var path = require('path');
+var isUserAuthenticated = require('./auth')
 
 router.post('/sign_up', function(req, res) {
   var name = req.body.name;
@@ -25,7 +26,7 @@ router.post('/sign_up', function(req, res) {
         console.log(err);
       }
       else {
-        res.redirect('/profile');
+        res.redirect('/welcome');
       }
     });
   }
@@ -34,11 +35,29 @@ router.post('/sign_up', function(req, res) {
   }
 });
 
+router.post('/login', function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+
+  User.findOne({username: 'username'}, function(err, user) {
+    if(err) {
+      res.redirect('/welcome');
+    }
+    else {
+      if(user.password == password) {
+        req.session.user = user;
+        console.log(user.username + " logged in !!");
+        res.redirect('/profile');
+      }
+    }
+  })
+});
+
 router.get('/welcome', function(req, res) {
   res.sendFile('welcome.html', { root: path.join(__dirname, '../views') });
 });
 
-router.get('/profile', function(req, res) {
+router.get('/profile', isUserAuthenticated, function(req, res) {
   res.sendFile('profile.html', { root: path.join(__dirname, '../views') });
 });
 
