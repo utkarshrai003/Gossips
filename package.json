@@ -16,6 +16,7 @@
     "express-session": "~1.15.3",
     "jade": "1.11.0",
     "mongoose": "4.9.9",
+    "nodemon": "1.11.0",
     "path": "0.12.7",
     "socket.io": "~2.0.1",
     "swig": "1.4.2",
