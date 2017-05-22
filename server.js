@@ -23,6 +23,7 @@ app.use(session({
 app.use(express.static('public/images'));
 
 app.use(require('./app/controllers/users.js'));
+app.use(require('./app/controllers/friend_requests.js'));
 
 app.listen(8081, function () {
   console.log('Server started at port: 8081');
