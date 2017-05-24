@@ -60,7 +60,11 @@ router.get('/welcome', function(req, res) {
 });
 
 router.get('/profile', isUserAuthenticated, function(req, res) {
-  res.sendFile('profile.html', { root: path.join(__dirname, '../views') });
+  var template = swig.compileFile(path.join(__dirname, '../views/profile.html'));
+  var output = template({
+    user: req.session["user"]
+  });
+  res.send(output);
 });
 
 router.get('/search_users', isUserAuthenticated, function(req, res) {
