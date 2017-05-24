@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var FriendRequest = require('../models/friend_request');
+var User = require('../models/user');
 var path = require('path');
 var isUserAuthenticated = require('./auth');
 
@@ -28,7 +29,14 @@ router.post('/send_request', isUserAuthenticated, function(req, res) {
                 console.log(err);
               }
               else {
-
+                var sender , receiver;
+                User.findOne({_id: sender_id}, function(err, record) {
+                  sender = record;
+                });
+                User.findOne({_id: receiver_id}, function(err, record) {
+                  receiver = record;
+                });
+                req.app.io.emit(receiver_id, {type: 'notification', sub_type: 'friend-request', data: {sender: sender, receiver: receiver}});
                 res.redirect('/profile');
               }
             });
@@ -41,6 +49,11 @@ router.post('/send_request', isUserAuthenticated, function(req, res) {
 });
 
 router.get('/friend_requests', function(req, res) {
+  // FriendRequest.remove({}, function(err, record) {
+  //
+  // });
+  //
+  // res.send({data: "removed"});
   FriendRequest.find({}, function(err, records) {
     if(err) {
       res.send({status: 400, error: "My error"});
