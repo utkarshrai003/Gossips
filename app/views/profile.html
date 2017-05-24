@@ -3,6 +3,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"></link>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <style>
       .app {
@@ -66,6 +67,41 @@
       }
     </style>
   </head>
+
+  <script>
+
+    $(document).ready(function() {
+      
+      initializeSockets();
+
+      $('#key').keyup(function() {
+        $.ajax({
+          type: "GET",
+          url: 'http://localhost:8081/search_users',
+          data: {
+              key: $('#key').val()
+          },
+          success: function(results) {
+            $(".results").empty();
+            results.forEach(function(result) {
+              var elem = "<li><a href='http://localhost:8081/users/" + result.id + "'>" + result.name + "</a></li>";;
+              $(".results").append(elem);
+            });
+          }
+        });
+      });
+    });
+
+    function initializeSockets() {
+      var socket = io.connect();
+      var user_id = "{{ user._id }}";
+      socket.on(user_id, function(data) {
+        debugger;
+      });
+
+    }
+
+  </script>
 
   <body>
     <div class="container-fluid app">
@@ -132,22 +168,3 @@
     </div>
   </body>
 </html>
-
-<script>
-  $('#key').keyup(function() {
-    $.ajax({
-      type: "GET",
-      url: 'http://localhost:8081/search_users',
-      data: {
-          key: $('#key').val()
-      },
-      success: function(results) {
-        $(".results").empty();
-        results.forEach(function(result) {
-          var elem = "<li><a href='http://localhost:8081/users/" + result.id + "'>" + result.name + "</a></li>";;
-          $(".results").append(elem);
-        });
-      }
-    });
-  });
-</script>
