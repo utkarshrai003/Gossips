@@ -4,6 +4,9 @@ var FriendRequest = require('../models/friend_request');
 var path = require('path');
 var isUserAuthenticated = require('./auth');
 
+// // Socket
+// var io = require('socket.io').listen(server);
+
 router.post('/send_request', isUserAuthenticated, function(req, res) {
   var sender_id = req.session.user._id;
   var receiver_id = req.body.to_user;
@@ -28,7 +31,7 @@ router.post('/send_request', isUserAuthenticated, function(req, res) {
                 console.log(err);
               }
               else {
-                
+
                 res.redirect('/profile');
               }
             });
