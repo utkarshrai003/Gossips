@@ -55,6 +55,12 @@ router.post('/login', function(req, res) {
   })
 });
 
+router.post('/logout', function(req, res) {
+  req.session.destroy();
+  res.redirect('/welcome');
+});
+
+
 router.get('/welcome', function(req, res) {
   res.sendFile('welcome.html', { root: path.join(__dirname, '../views') });
 });
