@@ -4,9 +4,6 @@ var FriendRequest = require('../models/friend_request');
 var path = require('path');
 var isUserAuthenticated = require('./auth');
 
-// // Socket
-// var io = require('socket.io').listen(server);
-
 router.post('/send_request', isUserAuthenticated, function(req, res) {
   var sender_id = req.session.user._id;
   var receiver_id = req.body.to_user;
@@ -43,10 +40,10 @@ router.post('/send_request', isUserAuthenticated, function(req, res) {
       });
 });
 
-router.get('/friend_requests', function(rq, res) {
+router.get('/friend_requests', function(req, res) {
   FriendRequest.find({}, function(err, records) {
     if(err) {
-      res.send({status: 400, error: "My errro"});
+      res.send({status: 400, error: "My error"});
     }
     else {
       res.send({status: 200, records: records});
