@@ -4,44 +4,52 @@ var FriendRequest = require('../models/friend_request');
 var path = require('path');
 var isUserAuthenticated = require('./auth');
 
-router.post('/send_request', function(req, res) {
+router.post('/send_request', isUserAuthenticated, function(req, res) {
   var sender_id = req.session.user._id;
   var receiver_id = req.body.to_user;
 
   FriendRequest.findOne({
-    $and: [
-      {
-        $or: [{sender_id: sender_id, receiver_id: receiver_id}, {receiver_id: sender_id, sender_id: receiver_id}],
-        $or: [{status: 'declined'}]
+    $or: [{sender_id: sender_id, receiver_id: receiver_id}, {receiver_id: sender_id, sender_id: receiver_id}],
+    })
+    .sort('-created_at')
+    .exec(function(err, friend_request) {
+      if(err) {
+        res.send({status: 400, error: "Error occured"});
       }
-    ]
-  }, function(err, request) {
-    if(err) {
-      res.send({status: 400, error: "Error occured"});
-    }
-    else if(!request) {
-      var request = new FriendRequest(
-        {
-          sender_id: sender_id,
-          receiver_id, receiver_id
-        });
-        user.save(function(err, record) {
-          if(err) {
-            console.log(err);
+      else {
+        if( !friend_request || ( friend_request && !(friend_request.status=='accepted' || friend_request.status=='pending')) ) {
+          var request = new FriendRequest(
+            {
+              sender_id: sender_id,
+              receiver_id: receiver_id
+            });
+            request.save(function(err, record) {
+              if(err) {
+                console.log(err);
+              }
+              else {
+                
+                res.redirect('/profile');
+              }
+            });
           }
           else {
-            res.redirect('/welcome');
+            res.send({status: 400, error: "Friend Request already sent"});
           }
-        });
-      }
-    else {
-      res.send({status: 400, error: "Name and Username needs to provided."});
+        }
+      });
+});
+
+router.get('/friend_requests', function(rq, res) {
+  FriendRequest.find({}, function(err, records) {
+    if(err) {
+      res.send({status: 400, error: "My errro"});
     }
+    else {
+      res.send({status: 200, records: records});
     }
   });
-
-
-  res.send({status: 200});
 });
+
 
 module.exports = router;
