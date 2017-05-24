@@ -3,6 +3,10 @@
 var express = require('express');
 var app = express();
 
+// Creating server
+var http = require('http');
+var server = http.createServer(app);
+
 // Database
 var database = require('./config/connection.js');
 
@@ -24,6 +28,10 @@ app.use(session({
 // Serving static content from the public repo
 app.use(express.static('public/images'));
 
+// Sockets
+var io = require('socket.io').listen(server);
+app.io = io;
+
 // Routes
 var routes = require('./app/routes');
 app.use('/', routes);
@@ -31,6 +39,6 @@ app.use('/', routes);
 // app.use(require('./app/controllers/friend_requests.js'));
 
 // Listening to the port
-app.listen(8081, function () {
+server.listen(8081, function () {
   console.log('Server started at port: 8081');
 });
