@@ -51,7 +51,7 @@
         margin-right: 50px;
         display: flex;
       }
-      .notification {
+      .notifications {
         width: 30px;
         float:left;
         margin-left: 120px;
@@ -61,10 +61,28 @@
         width: 30px;
         height: 30px;
       }
+      .notification-dropdown {
+        width: 300px;
+        min-height: 0px;
+        max-height: 200px;
+        overflow-y: scroll;
+        border: 1px solid black;
+        position: absolute;
+        margin-top: 50px;
+        display: flex;
+        flex-wrap: wrap;
+        z-index: 1;
+        display: none;
+      }
+      .notification {
+        background-color: grey;
+        width: inherit;
+      }
       .friendsSearch {
       }
       .profileOptions {
         margin-top: 8px;
+        width: inherit;
       }
       #profileMenuButton {
         border-radius: 100%;
@@ -73,7 +91,14 @@
         display: none;
       }
       .results {
-        style: none
+        min-height: 0px;
+        max-height: 100px;
+        overflow-y: auto;
+      }
+      .list-group-item {
+        z-index: 1;
+        height: 34px;
+        padding-top: 4px;
       }
     </style>
   </head>
@@ -85,26 +110,44 @@
       initializeSockets();
 
       $('#key').keyup(function() {
-        $.ajax({
-          type: "GET",
-          url: 'http://localhost:8081/search_users',
-          data: {
-              key: $('#key').val()
-          },
-          success: function(results) {
-            $(".results").empty();
-            results.forEach(function(result) {
-              var elem = "<li><a href='http://localhost:8081/users/" + result.id + "'>" + result.name + "</a></li>";;
-              $(".results").append(elem);
-            });
-          }
-        });
+        var searchKey = $("#key").val();
+        if(searchKey!=="") {
+          $.ajax({
+            type: "GET",
+            url: 'http://localhost:8081/search_users',
+            data: {
+                key: searchKey
+            },
+            success: function(results) {
+              $(".results").empty();
+              results.forEach(function(result) {
+                var elem = "<a class='list-group-item' href='http://localhost:8081/users/" + result.id + "'>" + result.name + "</a>";
+                $(".results").append(elem);
+              });
+            }
+          });
+        }
+        else {
+          $(".results").empty();
+        }
       });
 
       $('#logOut').click(function() {
         $("#logOutForm").submit();
       });
-      
+
+      var notificationShow = false;
+      $('.notifications').click(function() {
+        if(notificationShow) {
+          notificationShow = false;
+          $(".notification-dropdown").hide();
+        }
+        else {
+          notificationShow = true;
+          $(".notification-dropdown").show();
+        }
+      });
+
     });
 
     function initializeSockets() {
@@ -113,7 +156,6 @@
       socket.on(user_id, function(data) {
         debugger;
       });
-
     }
 
   </script>
@@ -125,34 +167,47 @@
           <a class="navbar-brand" href="#">WebSiteName</a>
         </div>
         <div class="options">
-          <div class="notification">
-            <img src="notification.png" class="notificationIcon"></img>
+          <div class="notifications">
+            <a href="#"><img src="notification.png" class="notificationIcon"></img></a>
+          </div>
+          <div class="notification-dropdown">
+            <div class="notification">
+              <p>Hitesh sent you friend Request</p>
+              <button class="btn btn-default">Accept</button>
+              <button class="btn btn-default">Decline</button>
+            </div>
+            <div class="notification">
+              <p>Hitesh sent you friend Request</p>
+              <button class="btn btn-default">Accept</button>
+              <button class="btn btn-default">Decline</button>
+            </div>
           </div>
           <div class="friendsSearch">
             <form class="navbar-form navbar-left">
               <div class="form-group">
                 <div class="dropdown">
                   <input type="text" class="form-control" id="key" name="key" placeholder="Search">
-                  <ul class="results">
-            		 </ul>
+                  <div class="results">
+                    <ul class="list-group">
+                		</ul>
+                   </div>
+                  </div>
                 </div>
-              </div>
-            </form>
-          </div>
-          <div class="profileOptions">
-            <div class="dropdown">
-              <button class="btn btn-default dropdown-toggle" id="profileMenuButton" type="button" data-toggle="dropdown">{{ user.name.charAt(0) }}
-              <span class="caret"></span></button>
-              <ul class="dropdown-menu" style="right: 0; left: auto;">
-                <li><a href="#">Logged in as: {{ user.name }}</a></li>
-                <li><a href="#" id="logOut">Log out</a></li>
-              </ul>
-              <form action="http://localhost:8081/logout" method="post" id="logOutForm">
               </form>
             </div>
           </div>
+          <div class="profileOptions">
+            <button class="btn btn-default dropdown-toggle" id="profileMenuButton" type="button" data-toggle="dropdown">{{ user.name.charAt(0) }}
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" style="right: 0; left: auto;">
+              <li><a href="#">Logged in as: {{ user.name }}</a></li>
+              <li><a href="#" id="logOut">Log out</a></li>
+            </ul>
+            <form action="http://localhost:8081/logout" method="post" id="logOutForm">
+            </form>
+          </div>
         </div>
-      </div>
       </div>
       <div class="row">
         <div class="friendListWindow col-md-3">
