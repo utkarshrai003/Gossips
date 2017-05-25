@@ -144,11 +144,30 @@
         }
         else {
           notificationShow = true;
+          loadNotifications();
           $(".notification-dropdown").show();
         }
       });
 
     });
+
+    function loadNotifications() {
+      $.ajax({
+        type: "GET",
+        url: 'http://localhost:8081/friend_requests',
+        beforeSend: function() {
+          console.log("Give loader here");
+        },
+        success: function(data) {
+          $(".notification-dropdown").empty();
+          debugger;
+          data["senders"].forEach(function(sender) {
+            var elem = "<div class='notification'><p>" + sender.name + " sent you a frind request..<p><button id=" + sender._id + " class='btn btn-default'>Accept</button><button id=" + sender._id + " class='btn btn-default'>Decline</button></div>";
+            $(".notification-dropdown").append(elem);
+          });
+        }
+      });
+    }
 
     function initializeSockets() {
       var socket = io.connect();
@@ -171,16 +190,7 @@
             <a href="#"><img src="notification.png" class="notificationIcon"></img></a>
           </div>
           <div class="notification-dropdown">
-            <div class="notification">
-              <p>Hitesh sent you friend Request</p>
-              <button class="btn btn-default">Accept</button>
-              <button class="btn btn-default">Decline</button>
-            </div>
-            <div class="notification">
-              <p>Hitesh sent you friend Request</p>
-              <button class="btn btn-default">Accept</button>
-              <button class="btn btn-default">Decline</button>
-            </div>
+            <!-- <img src="loader.gif" class="loader"></img> -->
           </div>
           <div class="friendsSearch">
             <form class="navbar-form navbar-left">
