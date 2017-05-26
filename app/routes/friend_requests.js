@@ -53,42 +53,96 @@ router.post('/send_request', isUserAuthenticated, function(req, res) {
   });
 });
 
-// router.get('/friend_requests', function(req, res) {
-//   // FriendRequest.remove({}, function(err, record) {
-//   //
-//   // });
-//   // res.send({data: "removed"});
-//   FriendRequest.find({}, function(err, records) {
-//     if(err) {
-//       res.send({status: 400, error: "My error"});
-//     }
-//     else {
-//       res.send({status: 200, records: records});
-//     }
-//   });
-// });
-
-
-// Endpoint to return the users who sent friend requests to the currently logged in user
-router.get('/friend_requests', isUserAuthenticated, function(req, res) {
-  var promise = FriendRequest.find({receiver_id: req.session.user._id, status: 'pending'}).exec();
-
-  promise.then(function(requests) {
-
-    var sender_ids = _.map(requests, function(obj) {
-      return obj.sender_id;
-    });
-    console.log("Sender ids =>  " + sender_ids);
-    return User.find({_id: {$in: sender_ids}}).exec();
-  })
-  .then(function(request_senders) {
-    console.log("Request senders => " + request_senders);
-    res.send({status: 200, senders: request_senders});
-  })
-  .catch(function(err) {
-    res.send({ status: 400, error: err });
+router.get('/test', function(req, res) {
+  // FriendRequest.remove({}, function(err, record) {
+  //
+  // });
+  // res.send({data: "removed"});
+  User.find({}, function(err, records) {
+    if(err) {
+      res.send({status: 400, error: "My error"});
+    }
+    else {
+      res.send({status: 200, records: records});
+    }
   });
 });
+
+
+// CAN BE REFACTORED I THINK
+// Endpoint to return the users who sent friend requests to the currently logged in user
+// router.get('/friend_requests', isUserAuthenticated, function(req, res) {
+//   var promise = FriendRequest.find({receiver_id: req.session.user._id, status: 'pending'}).exec();
+//
+//   promise.then(function(requests) {
+//     var data = [];
+//     _.each(requests, function(request) {
+//       var sender_id = request.sender_id;
+//       User.findOneAsync({_id: sender_id}).exec(function(err, record) {
+//         data.push({
+//           request: request,
+//           sender: user
+//         });
+//       });
+//       console.log("Data is : " + data);
+//     });
+//     res.send({status: 200, senders: data});
+//   })
+//   .catch(function(err) {
+//     res.send({ status: 400, error: err });
+//   });
+
+
+  // promise.then(function(requests) {
+  //   var sender_ids = _.map(requests, function(obj) {
+  //     return obj.sender_id;
+  //   });
+  //   console.log("Sender ids =>  " + sender_ids);
+  //   return User.find({_id: {$in: sender_ids}}).exec();
+  // })
+  // .then(function(request_senders) {
+  //   console.log("Request senders => " + request_senders);
+  //   res.send({status: 200, senders: request_senders});
+  // })
+  // .catch(function(err) {
+  //   res.send({ status: 400, error: err });
+  // });
+// });
+
+// {
+//   request_id: ,
+//   sender_info:
+// }
+
+// request id is required
+// router.post('/accept_request', isUserAuthenticated, function(req, res) {
+//   var current_user_id = req.session.user._id;
+//   var friend_user_id = req.body.friend_id;
+//   var picked;
+//
+//   // For friend 1
+//   User.findOne({_id: current_user_id}).exec(function(err, record) {
+//     picked = _.pick(record, "_id", "name", "username");
+//     User.update({_id: current_user_id}, {$push: {friends: picked}}).exec(function(err, record) {
+//       // if(err) {
+//       //   res.send({ststus: 400, error: err});
+//       // }
+//     });
+//   });
+//
+//   // For friend 1
+//   User.findOne({_id: friend_user_id}).exec(function(err, record) {
+//     picked = _.pick(record, "_id", "name", "username");
+//     User.update({_id: friend_user_id}, {$push: {friends: picked }}).exec(function(err, record) {
+//       console.log('checkpoint 1');
+//       // if(err) {
+//       //   res.send({status: 400, error: err});
+//       // }
+//     });
+//   });
+//
+//   res.send({status: 200, data: "done"});
+// });
 
 
 module.exports = router;
