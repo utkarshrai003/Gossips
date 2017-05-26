@@ -67,10 +67,14 @@ router.get('/welcome', function(req, res) {
 
 router.get('/profile', isUserAuthenticated, function(req, res) {
   var template = swig.compileFile(path.join(__dirname, '../views/profile.html'));
-  var output = template({
-    user: req.session["user"]
+  var promise = User.findOne({_id: req.session["user"]["_id"]}).exec();
+  promise.then(function(user) {
+    var output = template({
+      user: req.session["user"],
+      friends: user.friends
+    });
+    res.send(output);
   });
-  res.send(output);
 });
 
 router.get('/search_users', isUserAuthenticated, function(req, res) {
