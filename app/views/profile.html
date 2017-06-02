@@ -107,7 +107,81 @@
 
     $(document).ready(function() {
 
-      initializeSockets();
+      // var socket;
+      // initializeSockets();
+      //
+      var selectedFriend;
+      //
+      // Method to display selected friend's name above the chat window
+      $('.friend-block').click(function() {
+        selectedFriend = $(this).attr('id');
+        $(".display-name").html($(this).attr('name'));
+      });
+
+      // Method to get the message and clear the text box for the chat box
+      $('#chatBox').on('keydown', function(e) {
+        if (e.which == 13) {
+          e.preventDefault();
+          var message = $("#chatBox").val();
+          emitMessage(message);
+          $('#chatBox').val('');
+        }
+      });
+
+    //   socket.on("fw3rwdw", function(data) {
+    //     alert(data);
+    // });
+
+
+      // Method to emit the messages
+      function emitMessage(message) {
+        socket = io.connect();
+        if(selectedFriend) {
+          var data = {
+            sender: '{{ user._id }}',
+            receiver: selectedFriend,
+            message: message
+          }
+          socket.emit(selectedFriend._id, message);
+        }
+        else {
+          alert("Select a friend to emit the message");
+        }
+      }
+
+      $('.notification-dropdown').on('click', '.acceptRequest', function(){
+        debugger;
+        $.ajax({
+          type: "POST",
+          url: 'http://localhost:8081/accept_request',
+          data: {
+            request_id: $('.acceptRequest').attr('id')
+          },
+          success: function(data) {
+            // Update the friend list here
+            debugger;
+          }
+        })
+      });
+
+      // $('.acceptRequest').click(function() {
+      //   debugger;
+      //   $.ajax({
+      //     type: "POST",
+      //     url: 'http://localhost:8081/accept_request',
+      //     data: {
+      //       request_id: $('.acceptRequest').attr('id')
+      //     },
+      //     success: function(data) {
+      //       // Update the friend list here
+      //       debugger;
+      //     }
+      //   })
+      // });
+
+      $(".declineRequest").click(function() {
+        debugger;
+      });
 
       $('#key').keyup(function() {
         var searchKey = $("#key").val();
@@ -158,24 +232,22 @@
         beforeSend: function() {
           console.log("Give loader here");
         },
-        success: function(data) {
+        success: function(res) {
           $(".notification-dropdown").empty();
-          debugger;
-          data["senders"].forEach(function(sender) {
-            var elem = "<div class='notification'><p>" + sender.name + " sent you a frind request..<p><button id=" + sender._id + " class='btn btn-default'>Accept</button><button id=" + sender._id + " class='btn btn-default'>Decline</button></div>";
+          res["data"].forEach(function(request) {
+            var elem = "<div class='notification'><p>" + request.sender.name + " sent you a frind request..<p><button id=" + request._id + " class='btn btn-default acceptRequest'>Accept</button><button id=" + request._id + " class='btn btn-default declineRequest'>Decline</button></div>";
             $(".notification-dropdown").append(elem);
           });
         }
       });
     }
-
-    function initializeSockets() {
-      var socket = io.connect();
-      var user_id = "{{ user._id }}";
-      socket.on(user_id, function(data) {
-        debugger;
-      });
-    }
+    //
+    // function initializeSockets() {
+    //   socket = io.connect();
+    //   var user_id = "{{ user._id }}";
+    //   // socket.on(user_id, function(data) {
+    //   // });
+    // }
 
   </script>
 
@@ -225,27 +297,16 @@
           </div>
           <div class="userList">
             <ul class="list-group">
-              <li class="list-group-item">First item</li>
-              <li class="list-group-item">Second item</li>
-              <li class="list-group-item">Third item</li>
-              <li class="list-group-item">First item</li>
-              <li class="list-group-item">Second item</li>
-              <li class="list-group-item">Third item</li>
-              <li class="list-group-item">First item</li>
-              <li class="list-group-item">Second item</li>
-              <li class="list-group-item">Third item</li>
-              <li class="list-group-item">First item</li>
-              <li class="list-group-item">Second item</li>
-              <li class="list-group-item">Third item</li>
-              <li class="list-group-item">First item</li>
-              <li class="list-group-item">Second item</li>
-              <li class="list-group-item">Third item</li>
+              {% for friend in friends %}
+                <a class='list-group-item friend-block' id="{{ friend._id }}" name="{{ friend.name }}" href='#'>{{ friend.name }}</a>
+              {% endfor %}
             </ul>
           </div>
         </div>
 
         <div class="chatWindow col-md-9">
           <div class="chatInfo">
+            <strong class="display-name"></strong>
           </div>
           <div class="chats">
           </div>
