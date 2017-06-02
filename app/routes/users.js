@@ -71,7 +71,7 @@ router.get('/profile', isUserAuthenticated, function(req, res) {
   promise.then(function(user) {
     var output = template({
       user: req.session["user"],
-      friends: user.friends
+      friends: [{_id: "kkscww", name: "Aman sahai"}, {_id: "fw3rwdw", name: "Geeta Basi"}] // user.friends
     });
     res.send(output);
   });
