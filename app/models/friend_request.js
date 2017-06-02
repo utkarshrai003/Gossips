@@ -4,8 +4,8 @@ mongoose.Promise = require('bluebird');
 var Schema = mongoose.Schema;
 
 var friendRequestSchema = new Schema({
-  sender_id: { type: String, required: true },
-  receiver_id: { type: String, required: true },
+  sender: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  receiver: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   status: { type: String, enum: ['pending', 'accepted', 'declined'], default: 'pending'}
 });
 
