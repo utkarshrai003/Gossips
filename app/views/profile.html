@@ -298,7 +298,8 @@
           <div class="userList">
             <ul class="list-group">
               {% for friend in friends %}
-                <a class='list-group-item friend-block' id="{{ friend._id }}" name="{{ friend.name }}" href='#'>{{ friend.name }}</a>
+                {{ friends | json }}
+                  <a class='list-group-item friend-block' id="{{ friend[0]['_id'] }}" name="{{ friend[0]['name'] }}" href='#'>{{ friend[0]['name'] }}</a>
               {% endfor %}
             </ul>
           </div>

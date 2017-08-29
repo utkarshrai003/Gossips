@@ -65,13 +65,15 @@ router.get('/welcome', function(req, res) {
   res.sendFile('welcome.html', { root: path.join(__dirname, '../views') });
 });
 
+// User Chat screen with chat window
 router.get('/profile', isUserAuthenticated, function(req, res) {
   var template = swig.compileFile(path.join(__dirname, '../views/profile.html'));
-  var promise = User.findOne({_id: req.session["user"]["_id"]}).exec();
+  var promise = User.findOne({_id: req.session["user"]["_id"]}).populate('friends').exec();
   promise.then(function(user) {
+    // res.send({status: 200, record: _.pick(user, ['friends'])});
     var output = template({
-      user: req.session["user"],
-      friends: [{_id: "kkscww", name: "Aman sahai"}, {_id: "fw3rwdw", name: "Geeta Basi"}] // user.friends
+      user: _.pick(user, ['_id', 'name', 'username']),
+      friends: _.pick(user, ['friends'])
     });
     res.send(output);
   });
